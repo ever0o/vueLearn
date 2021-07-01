@@ -81,6 +81,12 @@
             console.log('Car light off')
         }
     }
-
-    
+    /**
+     * 接口继承接口
+     * 接口是可以互相继承的，这让哦我们能够从一个接口里赋值成员到另一个接口
+     * 里，可以更灵活的将接口分割到可重用的模块里
+     */
+    interface LightableAlarm extends Alarm, Light{
+        
+    }
 })()
