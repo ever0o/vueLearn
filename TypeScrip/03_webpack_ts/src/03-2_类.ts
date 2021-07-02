@@ -1,4 +1,11 @@
 (()=>{
+    /**
+     * 访问修饰符:用来描述类内部的属性/方法的可访问性
+     * public: 默认值，公开的外部也可以访问
+     * private: 只能类内部可以访问
+     * protected: 类内部和子类可以访问
+     * 
+     */
     // 公共,私有与受保护的修饰符
     class Animal{
         public name:string;
@@ -34,5 +41,8 @@
         }
     }
 
+    console.log(new Person('abc').name)//公共的可见
+    // console.log(new Person('abc').sex) 受保护的不可见
+    // console.log(new Person('abc').age) 私有的不可见
 
 })()
