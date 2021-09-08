@@ -5,5 +5,6 @@
 // import './03-3_类'
 // import './03-4_类'
 // import './03-5_类'
-import './04_函数'
+// import './04_函数'
+import './05_泛型'
 document.write('hello,world')

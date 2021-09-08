@@ -26,7 +26,10 @@
             return firstName;
         }
     }
-
+    /**
+     * 剩余参数
+     * 
+    */
     console.log(buildName('C','D'))
     console.log(buildName('C'))
     console.log(buildName())
@@ -36,5 +39,18 @@
     }
 
     info('abc','c','b','a')
+    
+
+// function reloadadd(x: string,y: string): string
+// function reloadadd(x: number, y: number): number
+
+//在当前函数重载无法实现
+// function reloadadd(x: string|number,y: string|number): string|number{
+//     if(typeof x === 'string' && typeof y === 'string'){
+//         return x + y
+//     }else if (typeof x === 'number' && typeof y === 'number'){
+//         return x + y
+//     }
+// }
 
 })()
