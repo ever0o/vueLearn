@@ -1,47 +1,89 @@
 <template>
-  <h2>reactive 和 ref 的细节问题</h2>
-  <h3>m1:{{m1}}</h3>
-  <h3>m2:{{m2}}</h3>
-  <h3>m3:{{m3}}</h3>
+  <h2>计算属性和监视</h2>
+  <fieldset>
+    <legend>姓名操作</legend>
+    姓氏: <input type="text" placeholder="请输入姓氏" v-model="user.firstName"/><br />
+    名字: <input type="text" placeholder="请输入名字" v-model="user.lastName"/><br />
+  </fieldset>
+  <fieldset>
+    <legend>计算属性和监视的演示</legend>
+    姓名: <input type="text" placeholder="显示姓名" v-model="fullName1" /><br />
+    姓名: <input type="text" placeholder="显示姓名" v-model="fullName2" /><br />
+    姓名: <input type="text" placeholder="显示姓名" v-model="fullName3"/><br />
+  </fieldset>
 </template>
 
 <script lang="ts">
-
-import { defineComponent,ref,reactive} from 'vue'
+import { computed, defineComponent, reactive, ref, watch, watchEffect } from "vue";
 
 export default defineComponent({
-name: 'App',
+  name: "App",
+  setup(){
+    const user = reactive({
+      firstName: 'Alex',
+      lastName: 'Bob'
+    })
+    // 通过计算属性的方式，实现第一个姓名的显示
+    // vue3中计算属性
+    // 计算属性的函数中如果只传入一个回调函数，表示的是get
 
-setup(){
-  // 通过ref的方式设置数据
-  const m1 = ref('abc')
-  const m2 = reactive({
-    name:'小明',
-    wife:{
-      name:'小红'
-    }
-  })
-  
-  const m3 = ref({
-    name:'小明',
-    wife:{
-      name:'小红'
-    }
-  })
-  // 更新数据
-  const update = () =>{
-    m1.value+='==='
-    m2.wife.name+='==='
-    m3.value.name+='==='
-  }
-  return{
-    m1,m2,m3
-  }
-}
+    // 第一个姓名：
+    // 返回的是一个Ref类型的对象
+    const fullName1 = computed(()=>{
+        return user.firstName+'_'+user.lastName
+    })
+    console.log('fullName1 : ',fullName1)
 
-})
+    // 第二个姓名：
+    const fullName2 = computed({
+      get(){
+        return user.firstName+'_'+user.lastName
+      },
+      set(val:string){
+        // console.log('fullName2 : ',val)
+        const names = val.split('_')
+        user.firstName = names[0]
+        user.lastName = names[1]
+      }
+    })
+
+    // 第三个姓名
+    const fullName3 = ref('')
+    // 监视-监视指定的数据
+    watch(user,({firstName,lastName})=>{
+      fullName3.value = firstName + '_' + lastName
+    },{immediate:true,deep:true})
+    // immediate 默认会执行一次watch， deep 深度监视
+    
+    // 监视，不需要配置immediate，本身默认就会进行监视（默认执行一次）
+    // watchEffect(()=>{
+    //   fullName3.value = user.firstName + '_' + user.lastName
+    // })
+    
+    // 监视fullName3的数据，改变firstName和lastName
+    watchEffect(()=>{
+      const names = fullName3.value.split('_')
+      user.firstName = names[0]
+      user.lastName = names[1]
+    })
+    
+    // watch----可以监视多个数据的
+    // watch([user.firstName,user.lastName,fullName3],()=>{
+    //     // 这里的代码就没有执行，fullName3是响应式的数据，但是，user.firstName,USER.lastName不是响应式的数据
+    //     console.log('===')
+    // })
+    // 当我们使用watch监视非响应式的数据的时候，代码需要改一下
+    watch([()=>user.firstName,()=>user.lastName,()=>fullName3],()=>{
+        // 这里的代码就没有执行，fullName3是响应式的数据，但是，user.firstName,USER.lastName不是响应式的数据
+        console.log('===')
+    })
+    
+    return{
+      user,fullName1,fullName2,fullName3
+    }
+  }
+});
 </script>
 
 <style>
-
 </style>
